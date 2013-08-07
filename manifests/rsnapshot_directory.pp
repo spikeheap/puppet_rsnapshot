@@ -1,4 +1,4 @@
-class rsnapshot_directory {
+class rsnapshot_directory ($directory = "/var/"){
   
   # TODO backup user
   # TODO backup user SSH keys
