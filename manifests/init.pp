@@ -6,11 +6,11 @@ class rsnapshot {
   #
   # TODO owner, group, mode
   #  
-  file { '/etc/rsnapshot.conf':
-    ensure  => present,
-    source  => 'puppet:///modules/rsnapshot/etc/rsnapshot.conf',
-    require => Package['rsnapshot'],
-  }
+#  file { '/etc/rsnapshot.conf':
+#    ensure  => present,
+#    source  => 'puppet:///modules/rsnapshot/etc/rsnapshot.conf',
+#    require => Package['rsnapshot'],
+#  }
   
   file { '/etc/default/rsync':
     ensure  => present,
@@ -20,7 +20,7 @@ class rsnapshot {
    concat { '/etc/rsnapshot.conf': }
    
    concat::fragment { 'rsnapshot_default':
-     target  => '/etc/motd',
+     target  => '/etc/rsnapshot.conf',
      source  => 'puppet:///modules/rsnapshot/etc/rsnapshot.conf',
      order   => '01',
    }

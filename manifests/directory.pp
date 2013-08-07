@@ -1,4 +1,4 @@
-class rsnapshot_directory ($directory = "/var/"){
+define rsnapshot::directory {
   
   # TODO backup user
   # TODO backup user SSH keys
@@ -8,9 +8,10 @@ class rsnapshot_directory ($directory = "/var/"){
   #backup	/etc/		localhost/
   #backup	/usr/local/	localhost/
   
+
   concat::fragment { "rsnapshot_fragment_$name":
     target  => '/etc/rsnapshot.conf',
-    content => "backup	$directory	${::fqdn}/\n",
+    content => "backup	$name	${::fqdn}/\n",
     order   => '15',
   }
 }
