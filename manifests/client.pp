@@ -1,4 +1,8 @@
 class rsnapshot::client( $dirs = [] ){
-  #$rsnapshot_dirs = hiera('rsnapshot_directories',[])
+	
+  # TODO backup user
+  # TODO backup user SSH keys
+  # TODO require SSH
+	
   rsnapshot::directory{$dirs: }
 }

@@ -1,9 +1,5 @@
 define rsnapshot::directory {
   
-  # TODO backup user
-  # TODO backup user SSH keys
-  # TODO require SSH
-  
   # Add a slash if it's been omitted (otherwise rsnapshot just won't work)
   if $name !~ /\/$/ {
     $directory = "${name}/"
