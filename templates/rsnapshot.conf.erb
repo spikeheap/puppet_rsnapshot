@@ -11,24 +11,25 @@ no_create_root	<%= @no_create_root ? 1 : 0 %>
 #################################
 # EXTERNAL PROGRAM DEPENDENCIES #
 #################################
-cmd_rsync	<%= $cmd_rsync %>
+cmd_rsync	<%= @cmd_rsync %>
 
-<% if $cmd_cp -%>
-cmd_cp		<%= $cmd_cp	   %>
+<% if @cmd_cp -%>
+cmd_cp		<%= @cmd_cp %>
 <% end -%>
-<% if $cmd_rm -%>
-cmd_rm		<%= $cmd_rm	   %><% end -%>
-<% if $cmd_ssh -%>
-cmd_ssh		<%= $cmd_ssh   %>	
+<% if @cmd_rm -%>
+cmd_rm		<%= @cmd_rm %>
 <% end -%>
-<% if $cmd_du -%>
-cmd_du		<%= $cmd_du	   %>
+<% if @cmd_ssh -%>
+cmd_ssh		<%= @cmd_ssh %>	
+<% end -%>
+<% if @cmd_du -%>
+cmd_du		<%= @cmd_du %>
 <% end -%>
 <% if @cmd_logger -%>
 cmd_logger	<%= @cmd_logger %>
 <% end -%>
-<% if $cmd_rsnapshot_diff -%>
-cmd_rsnapshot_diff	<%= $cmd_rsnapshot_diff %>
+<% if @cmd_rsnapshot_diff -%>
+cmd_rsnapshot_diff	<%= @cmd_rsnapshot_diff %>
 <% end -%>
 
 <% if @cmd_preexec -%>
@@ -84,8 +85,6 @@ ssh_args	<%= @ssh_args %>
 <% end -%>
 du_args	<%= @du_args %>
 
-<%= @one_fs ? 1 : 0 %>
-
 <% @rsync_include.each do |val| -%>
 include <%= val %>
 <% end -%>
@@ -99,6 +98,7 @@ include_file <%= val %>
 exclude_file <%= val %>
 <% end -%>
 
+one_fs  <%= @one_fs ? 1 : 0 %>
 link_dest	<%= @link_dest ? 1 : 0 %>
 sync_first	<%= @sync_first ? 1 : 0 %>
 use_lazy_deletes	<%= @use_lazy_deletes ? 1 : 0 %>
