@@ -35,7 +35,7 @@ class rsnapshot (
   $rsync_include          = [],
   $rsync_exclude          = [],
   $rsync_include_file     = [],
-  $rsync_exclude_exclude  = [],
+  $rsync_exclude_file  = [],
   $link_dest              = true,
   $sync_first             = false,
   $use_lazy_deletes       = false,
@@ -68,7 +68,7 @@ class rsnapshot (
    
   concat::fragment { 'rsnapshot_default':
     target  => '/etc/rsnapshot.conf',
-    content => template('rsnapshot.conf'),
+    content => template('rsnapshot/rsnapshot.conf.erb'),
     order   => '01',
   }
 }
