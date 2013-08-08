@@ -13,32 +13,32 @@ no_create_root	<%= @no_create_root ? 1 : 0 %>
 #################################
 cmd_rsync	<%= $cmd_rsync %>
 
-<% if $cmd_cp %>
+<% if $cmd_cp -%>
 cmd_cp		<%= $cmd_cp	   %>
 <% end -%>
-<% if $cmd_rm %>
+<% if $cmd_rm -%>
 cmd_rm		<%= $cmd_rm	   %><% end -%>
-<% if $cmd_ssh %>
+<% if $cmd_ssh -%>
 cmd_ssh		<%= $cmd_ssh   %>	
 <% end -%>
-<% if $cmd_du %>
+<% if $cmd_du -%>
 cmd_du		<%= $cmd_du	   %>
 <% end -%>
-<% if @cmd_logger %>
+<% if @cmd_logger -%>
 cmd_logger	<%= @cmd_logger %>
 <% end -%>
-<% if $cmd_rsnapshot_diff %>
+<% if $cmd_rsnapshot_diff -%>
 cmd_rsnapshot_diff	<%= $cmd_rsnapshot_diff %>
 <% end -%>
 
-<% if @cmd_preexec %>
+<% if @cmd_preexec -%>
 cmd_preexec	<%= @cmd_preexec %>
 <% end -%>
-<% if @cmd_postexec %>
+<% if @cmd_postexec -%>
 cmd_postexec	<%= @cmd_postexec %>
 <% end -%>
 
-<% if @use_lvm %>
+<% if @use_lvm -%>
 linux_lvm_cmd_lvcreate	<%= @linux_lvm_cmd_lvcreate %>
 linux_lvm_cmd_lvremove	<%= @linux_lvm_cmd_lvremove %>
 linux_lvm_cmd_mount		<%= @linux_lvm_cmd_mount %>
@@ -54,16 +54,16 @@ linux_lvm_mountpath	    <%= @linux_lvm_mountpath %>
 # Must be unique and in ascending order #
 # i.e. hourly, daily, weekly, etc.      #
 #########################################
-<% if @interval_hourly %>
+<% if @interval_hourly -%>
 retain		hourly	<%= @interval_hourly %>
 <% end -%>
-<% if @interval_daily %>
+<% if @interval_daily -%>
 retain		daily	<%= @interval_hourly %>
 <% end -%>
-<% if @interval_weekly %>
+<% if @interval_weekly -%>
 retain		weekly	<%= @interval_hourly %>
 <% end -%>
-<% if @interval_monthly %>
+<% if @interval_monthly -%>
 retain		monthly	<%= @interval_hourly %>
 <% end -%>
 
@@ -79,7 +79,7 @@ stop_on_stale_lockfile			<%= @stop_on_stale_lockfile ? 1 : 0 %>
 
 rsync_short_args	<%= @rsync_short_args %>
 rsync_long_args	<%= @rsync_long_args %>
-<% if @ssh_args %>
+<% if @ssh_args -%>
 ssh_args	<%= @ssh_args %>
 <% end -%>
 du_args	<%= @du_args %>
