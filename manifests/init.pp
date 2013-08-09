@@ -41,17 +41,19 @@ class rsnapshot (
   $use_lazy_deletes       = false,
   $rsync_numtries         = 0,
   $ssh_private_key        = undef,
-  $sync_first            = true,
-  $cron_sync_hour        = '*/4',    # Every 4 hours
-  $cron_sync_minute      = 0,
-  $cron_hourly_hour      = '1-23/4', # Every 4 hours, offset by 1
-  $cron_hourly_minute    = 30,
-  $cron_daily_hour       = 23,
-  $cron_daily_minute     = 0,
-  $cron_weekly_hour      = 22,
-  $cron_weekly_minute    = 0,
-  $cron_monthly_hour     = 21,
-  $cron_monthly_minute   = 0,
+  $sync_first             = true,
+  $cron_sync_hour         = '*/4',    # Every 4 hours
+  $cron_sync_minute       = 0,
+  $cron_hourly_hour       = '1-23/4', # Every 4 hours, offset by 1
+  $cron_hourly_minute     = 30,
+  $cron_daily_hour           = 23,
+  $cron_daily_minute         = 0,
+  $cron_weekly_hour          = 22,
+  $cron_weekly_minute        = 0,
+  $cron_weekly_day_of_week   = 0,
+  $cron_monthly_hour         = 21,
+  $cron_monthly_minute       = 0,
+  $cron_monthly_day_of_month = 28,
 ){
 
   package { 'rsnapshot':
@@ -79,7 +81,7 @@ class rsnapshot (
     mode    => '0600'
   }
 
-  file { $snapshot_root }:
+  file { $snapshot_root :
     ensure => directory,
     owner  => 'backup',
     group  => 'backup',
@@ -130,17 +132,20 @@ class rsnapshot (
     user    => rsnapshot,
     hour    => $cron_weekly_hour,
     minute  => $cron_weekly_minute,
+    weekday => $cron_weekly_day_of_week,
   }
   cron { 'rsnapshot_monthly':
-    command => '/usr/bin/rsnapshot monthly',
-    user    => rsnapshot,
-    hour    => $cron_monthly_hour,
-    minute  => $cron_monthly_minute,
+    command  => '/usr/bin/rsnapshot monthly',
+    user     => rsnapshot,
+    hour     => $cron_monthly_hour,
+    minute   => $cron_monthly_minute,
+    monthday => $cron_monthly_day_of_month,
   }
 
   # Build the Rsnapshot configuration file with the fragments from all clients
   concat { '/etc/rsnapshot.conf': }
 
+  Concat::Fragment <<| |>>
   concat::fragment { 'rsnapshot_default':
     target  => '/etc/rsnapshot.conf',
     content => template('rsnapshot/rsnapshot.conf.erb'),

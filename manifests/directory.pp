@@ -1,4 +1,4 @@
-define rsnapshot::directory {
+define rsnapshot::directory ( $backup_user = 'rsnapshotclient'){
 
   # Add a slash if it's been omitted (otherwise rsnapshot just won't work)
   if $name !~ /\/$/ {
@@ -17,9 +17,9 @@ define rsnapshot::directory {
   #   BACKUP_DEST  The destination for the backup on the rsnapshot server,
   #                e.g. example.com/.
   #                Note that this doesn't include the path from DIRECTORY.
-  concat::fragment { "rsnapshot_fragment_$directory":
+  @@concat::fragment { "rsnapshot_fragment_${name}":
     target  => '/etc/rsnapshot.conf',
-    content => "backup\t$directory\t${::fqdn}/\n",
+    content => "backup\t${backup_user}@${::fqdn}:$directory\t${::fqdn}/\n",
     order   => '15',
   }
 }
