@@ -59,13 +59,13 @@ linux_lvm_mountpath	    <%= @linux_lvm_mountpath %>
 retain		hourly	<%= @interval_hourly %>
 <% end -%>
 <% if @interval_daily -%>
-retain		daily	<%= @interval_hourly %>
+retain		daily	<%= @interval_daily %>
 <% end -%>
 <% if @interval_weekly -%>
-retain		weekly	<%= @interval_hourly %>
+retain		weekly	<%= @interval_weekly %>
 <% end -%>
 <% if @interval_monthly -%>
-retain		monthly	<%= @interval_hourly %>
+retain		monthly	<%= @interval_monthly %>
 <% end -%>
 
 ############################################
