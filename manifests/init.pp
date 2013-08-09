@@ -78,17 +78,24 @@ class rsnapshot (
     ensure  => directory,
     owner   => 'rsnapshot',
     group   => 'backup',
-    mode    => '0600'
+    mode    => '0700'
   }
 
   file { $snapshot_root :
     ensure => directory,
-    owner  => 'backup',
+    owner  => 'rsnapshot',
     group  => 'backup',
     mode   => '0700'
   }
 
-  file { '/home/rsnapshot/.ssh/rsnapshot':
+  file { $log_file :
+    ensure => file,
+    owner  => 'rsnapshot',
+    group  => 'backup',
+    mode   => '0644'
+  }
+
+  file { '/home/rsnapshot/.ssh/id_rsa':
     ensure  => present,
     content => $ssh_private_key,
     owner   => 'rsnapshot',
@@ -98,7 +105,10 @@ class rsnapshot (
 
   file { '/var/run/rsnapshot':
     ensure  => directory,
-    # TODO owner & group
+    # TODO remove duplication
+    owner   => 'rsnapshot',
+    group   => 'backup',
+    mode    => '0700',
   }
 
   file { '/etc/default/rsync':
