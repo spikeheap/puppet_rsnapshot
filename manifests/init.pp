@@ -29,7 +29,7 @@ class rsnapshot (
   $stop_on_stale_lockfile = false,
   $rsync_short_args       = '-a',
   $rsync_long_args        = '--delete --numeric-ids --relative --delete-excluded',
-  $ssh_args               = undef,
+  $ssh_args               = '-o BatchMode=yes',
   $du_args                = '-csh',
   $one_fs                 = false,
   $rsync_include          = [],
@@ -39,7 +39,7 @@ class rsnapshot (
   $link_dest              = true,
   $sync_first             = false,
   $use_lazy_deletes       = false,
-  $rsync_numtries         = 0,
+  $rsync_numtries         = 1,
   $ssh_private_key        = undef,
   $sync_first             = true,
   $cron_sync_hour         = '*/4',    # Every 4 hours
