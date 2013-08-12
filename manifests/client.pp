@@ -1,4 +1,4 @@
-class rsnapshot::client( $ssh_public_key, $dirs = [] ){
+class rsnapshot::client( $ssh_rsa_pub_key, $dirs = [] ){
   include ssh-client
 
   user { 'rsnapshotclient':
@@ -15,19 +15,26 @@ class rsnapshot::client( $ssh_public_key, $dirs = [] ){
     gid    => '5001',
   }
 
-  file { '/home/rsnapshotclient/.ssh/':
-    ensure  => directory,
-    owner   => 'rsnapshotclient',
-    group   => 'backup',
-    mode    => '0600'
+  ssh_authorized_key {'rsnapshot_key':
+    ensure  => present,
+    key     => $ssh_rsa_pub_key,
+    type    => 'rsa',
+    user    => 'rsnapshotclient',
   }
 
-  file { '/home/rsnapshotclient/.ssh/authorized_keys':
+  # Include partial hostname 'app1.site' in hosts like 'app1.site.company.com'.
+  $partial_hostname = regsubst($fqdn, '\.nmi\.uk\.com$', '')
+  if $partial_hostname == $hostname {
+    $host_aliases = [ $ipaddress, $hostname ]
+  } else {
+    $host_aliases = [ $ipaddress, $hostname, $partial_hostname ]
+  }
+
+  @sshkey{"${::fqdn}_hostkey":
     ensure  => present,
-    content => $ssh_public_key,
-    owner   => 'rsnapshotclient',
-    group   => 'backupclient',
-    mode    => '0600',
+    type    => 'rsa',
+    key     => $sshrsakey,
+    host_aliases => $host_aliases,
   }
 
   rsnapshot::directory{$dirs: }

@@ -152,6 +152,8 @@ class rsnapshot (
     monthday => $cron_monthly_day_of_month,
   }
 
+  Sshkey <<| |>>
+
   # Build the Rsnapshot configuration file with the fragments from all clients
   concat { '/etc/rsnapshot.conf': }
 
