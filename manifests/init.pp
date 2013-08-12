@@ -157,6 +157,11 @@ class rsnapshot (
   # Build the Rsnapshot configuration file with the fragments from all clients
   concat { '/etc/rsnapshot.conf': }
 
+logrotate::rule { 'rsnapshot_log': 
+ path => $log_file,
+ compress => true,
+}
+
   Concat::Fragment <<| |>>
   concat::fragment { 'rsnapshot_default':
     target  => '/etc/rsnapshot.conf',
