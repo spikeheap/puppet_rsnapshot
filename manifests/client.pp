@@ -64,13 +64,6 @@ class rsnapshot::client( 	$server_ip,
     mode   => '0754',
   }
 
-  # This is necessary because of a bug in Puppet which makes it unreadable by default (http://projects.puppetlabs.com/issues/21811)
-  file{'/etc/ssh/ssh_known_hosts':
-    ensure => file,
-    owner  => 'root', 
-    group  => 'root',
-    mode   => '0644',
-  }
   @@sshkey{"${::fqdn}":
     ensure  => present,
     type    => 'rsa',
@@ -78,7 +71,7 @@ class rsnapshot::client( 	$server_ip,
     host_aliases => $host_aliases,
     tag     => 'rsnapshot-client',
   }
-  Sshkey <<| tag == 'rsnapshot' |>>
+#  Sshkey <<| tag == 'rsnapshot' |>>
 
 # TODO sudoers:
 # rsnapshotclient ALL=NOPASSWD:/usr/bin/rsync

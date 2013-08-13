@@ -154,13 +154,22 @@ class rsnapshot (
     monthday => $cron_monthly_day_of_month,
   }
 
-  @@sshkey{"${::fqdn}":
-    ensure  => present,
-    type    => 'rsa',
-    key     => $sshrsakey,
-    host_aliases => $host_aliases,
-    tag => 'rsnapshot',
+#  @@sshkey{"${::fqdn}":
+#    ensure  => present,
+#    type    => 'rsa',
+#    key     => $sshrsakey,
+#    host_aliases => $host_aliases,
+#    tag => 'rsnapshot',
+#  }
+
+  # This is necessary because of a bug in Puppet which makes it unreadable by default (http://projects.puppetlabs.com/issues/21811)
+  file{'/etc/ssh/ssh_known_hosts':
+    ensure => file,
+    owner  => 'root',
+    group  => 'root',
+    mode   => '0644',
   }
+
   Sshkey <<| tag == 'rsnapshot-client' |>>
 
   # Build the Rsnapshot configuration file with the fragments from all clients

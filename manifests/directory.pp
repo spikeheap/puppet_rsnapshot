@@ -17,7 +17,7 @@ define rsnapshot::directory ( $backup_user = 'rsnapshotclient'){
   #   BACKUP_DEST  The destination for the backup on the rsnapshot server,
   #                e.g. example.com/.
   #                Note that this doesn't include the path from DIRECTORY.
-  @@concat::fragment { "rsnapshot_fragment_${name}":
+  @@concat::fragment { "rsnapshot_fragment_${fqdn}_${name}":
     target  => '/etc/rsnapshot.conf',
     content => "backup\t${backup_user}@${::fqdn}:$directory\t${::fqdn}/\n",
     order   => '15',
