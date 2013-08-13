@@ -29,6 +29,7 @@ class rsnapshot (
   $stop_on_stale_lockfile = false,
   $rsync_short_args       = '-a',
   $rsync_long_args        = '--delete --numeric-ids --relative --delete-excluded',
+  $use_rsync_daemon       = true,
   $ssh_args               = '-o BatchMode=yes',
   $du_args                = '-csh',
   $one_fs                 = false,
@@ -152,15 +153,23 @@ class rsnapshot (
     monthday => $cron_monthly_day_of_month,
   }
 
-  Sshkey <<| |>>
+  @@sshkey{"${::fqdn}":
+    ensure  => present,
+    type    => 'rsa',
+    key     => $sshrsakey,
+    host_aliases => $host_aliases,
+    tag => 'rsnapshot',
+  }
+  Sshkey <<| tag == 'rsnapshot-client' |>>
 
   # Build the Rsnapshot configuration file with the fragments from all clients
   concat { '/etc/rsnapshot.conf': }
 
-logrotate::rule { 'rsnapshot_log': 
- path => $log_file,
- compress => true,
-}
+  # TODO make optional
+  logrotate::rule { 'rsnapshot_log': 
+    path => $log_file,
+    compress => true,
+  }
 
   Concat::Fragment <<| |>>
   concat::fragment { 'rsnapshot_default':
