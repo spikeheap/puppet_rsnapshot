@@ -1,3 +1,4 @@
+
 class rsnapshot (
   $snapshot_root          = '/var/cache/rsnapshot/',
   $no_create_root         = false,
@@ -55,60 +56,60 @@ class rsnapshot (
   $cron_monthly_hour         = 21,
   $cron_monthly_minute       = 0,
   $cron_monthly_day_of_month = 28,
-){
+	$rsnapshot_user            = 'rsnapshot',
+	$rsnapshot_group           = 'backup'){
 
   package { 'rsnapshot':
     ensure => present,
   }
 
-  user { 'rsnapshot':
+  user { $rsnapshot_user:
     ensure     => present,
     home       => '/home/rsnapshot',
     managehome => true,
     uid        => '5000',
-    gid        => 'backup',
+    gid        => $rsnapshot_group,
     shell      => '/bin/bash',
   }
 
-  group { 'backup':
+  group { $rsnapshot_group:
     ensure => present,
     gid    => '5000',
   }
 
   file { '/home/rsnapshot/.ssh/':
     ensure  => directory,
-    owner   => 'rsnapshot',
-    group   => 'backup',
+    owner   => $rsnapshot_user,
+    group   => $rsnapshot_group,
     mode    => '0700'
   }
 
   file { $snapshot_root :
     ensure => directory,
-    owner  => 'rsnapshot',
-    group  => 'backup',
+    owner  => $rsnapshot_user,
+    group  => $rsnapshot_group,
     mode   => '0700'
   }
 
   file { $log_file :
     ensure => file,
-    owner  => 'rsnapshot',
-    group  => 'backup',
+    owner  => $rsnapshot_user,
+    group  => $rsnapshot_group,
     mode   => '0644'
   }
 
   file { '/home/rsnapshot/.ssh/id_rsa':
     ensure  => present,
     content => $ssh_private_key,
-    owner   => 'rsnapshot',
-    group   => 'backup',
+    owner   => $rsnapshot_user,
+    group   => $rsnapshot_group,
     mode    => '0600',
   }
 
   file { '/var/run/rsnapshot':
     ensure  => directory,
-    # TODO remove duplication
-    owner   => 'rsnapshot',
-    group   => 'backup',
+    owner   => $rsnapshot_user,
+    group   => $rsnapshot_group,
     mode    => '0700',
   }
 

@@ -1,16 +1,21 @@
-class rsnapshot::client( $server_ip, $ssh_rsa_pub_key, $dirs = [] ){
+class rsnapshot::client( 	$server_ip, 
+													$ssh_rsa_pub_key, 
+													$dirs = [],
+													$client_username = 'rsnapshotclient',
+													$client_usergroup = 'backupclient'
+													){
   include ssh-client
 
-  user { 'rsnapshotclient':
+  user { $client_username:
     ensure     => present,
-    home       => '/home/rsnapshotclient',
+    home       => "/home/${client_username}",
     managehome => true,
     uid        => '5001',
-    gid        => 'backup',
+    gid        => $client_usergroup,
     shell      => '/bin/bash',
   }
 
-  group { 'backupclient':
+  group { $client_usergroup:
     ensure => present,
     gid    => '5001',
   }
@@ -19,7 +24,7 @@ class rsnapshot::client( $server_ip, $ssh_rsa_pub_key, $dirs = [] ){
     ensure  => present,
     key     => $ssh_rsa_pub_key,
     type    => 'rsa',
-    user    => 'rsnapshotclient',
+    user    => $client_username,
     options => [ "from=\"$server_ip\"",
                  'command="/usr/local/rsnapshot/validate_rsync.sh"',
                  'no-port-forwarding',
@@ -38,36 +43,26 @@ class rsnapshot::client( $server_ip, $ssh_rsa_pub_key, $dirs = [] ){
 
   file{'/usr/local/rsnapshot/':
     ensure => directory,
-    owner  => 'rsnapshotclient',
-    group  => 'backupclient',
+    owner  => $client_username,
+    group  => $client_usergroup,
     mode   => '0754',
   }
 
   file{'/usr/local/rsnapshot/validate_rsync.sh':
     ensure => file,
     source => 'puppet:///modules/rsnapshot/validate_rsync.sh',
-    owner  => 'rsnapshotclient',
-    group  => 'backupclient',
+    owner  => $client_username,
+    group  => $client_usergroup,
     mode   => '0754',
-    # TODO make owner and group variables
   }
 
   file{'/usr/local/rsnapshot/rsync_wrapper.sh':
     ensure => file,
     source => 'puppet:///modules/rsnapshot/rsync_wrapper.sh',
-    owner  => 'rsnapshotclient',
-    group  => 'backupclient',
+    owner  => $client_username,
+    group  => $client_usergroup,
     mode   => '0754',
-    # TODO make owner and group variables
   }
-
-#  file{'/usr/local/rsnapshot/rsnapshot-rsync.conf':
-#    ensure  => file,
-#    source  => 'puppet:///modules/rsnapshot/rsnapshot-rsync.conf',
-#    owner  => 'rsnapshotclient',
-#    group  => 'backupclient',
-#    mode   => '0644',
-# }
 
   # This is necessary because of a bug in Puppet which makes it unreadable by default (http://projects.puppetlabs.com/issues/21811)
   file{'/etc/ssh/ssh_known_hosts':
@@ -85,8 +80,6 @@ class rsnapshot::client( $server_ip, $ssh_rsa_pub_key, $dirs = [] ){
   }
   Sshkey <<| tag == 'rsnapshot' |>>
 
-## TODO wrap in IF
-# This is only necessary for the remote rsync with sudo configuration
 # TODO sudoers:
 # rsnapshotclient ALL=NOPASSWD:/usr/bin/rsync
   rsnapshot::directory{$dirs: }
