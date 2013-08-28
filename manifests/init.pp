@@ -111,7 +111,7 @@ class rsnapshot (
     mode   => '0644'
   }
 
-  file { '${rsnapshot_user_home}/.ssh/id_rsa':
+  file { "${rsnapshot_user_home}/.ssh/id_rsa":
     ensure  => present,
     content => $ssh_private_key,
     owner   => $rsnapshot_user,
