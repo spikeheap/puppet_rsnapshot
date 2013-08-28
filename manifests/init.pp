@@ -56,9 +56,12 @@ class rsnapshot (
   $cron_monthly_hour         = 21,
   $cron_monthly_minute       = 0,
   $cron_monthly_day_of_month = 28,
-	$rsnapshot_user            = 'rsnapshot',
-	$rsnapshot_group           = 'backup'){
-
+  $rsnapshot_user            = 'rsnapshot',
+  $rsnapshot_group           = 'backup',
+  $private_dir               = 'private',
+  $public_dir                = 'public',
+  $mount_ro_nfs              = true
+){
   package { 'rsnapshot':
     ensure => present,
   }
@@ -187,4 +190,26 @@ class rsnapshot (
     content => template('rsnapshot/rsnapshot.conf.erb'),
     order   => '01',
   }
+
+  # Mount a read-only local NFS, following 
+  #  http://www.rsnapshot.org/howto/1.2/rsnapshot-HOWTO.en.html#restoring_backups
+  # TODO refactor this out into its own submodule
+
+  file {"${snapshot_root}/${private_dir}":
+    ensure => directory,
+  }
+
+
+#  if $mount_ro_nfs {
+#    include nfs::server
+#    #include nfs::client
+#    nfs::server::export{ "${snapshot_root}/${private_dir}":
+#      ensure  => 'mounted',
+#      clients  => 'localhost(ro,no_root_squash)'
+#    }
+#    Nfs::Client::Mount <<| server == $fqdn |>> {
+#      ensure => 'mounted',
+#      mount  => "${snapshot_root}/${public_dir}"
+#    }
+#  }
 }
