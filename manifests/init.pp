@@ -58,7 +58,7 @@ class rsnapshot (
   $cron_monthly_day_of_month = 28,
   $private_dir               = 'private',
   $public_dir                = 'public',
-  $mount_ro_nfs              = true
+  $mount_ro_nfs              = true,
   $rsnapshot_user            = 'root',
   $rsnapshot_group           = 'backup'
 ){
