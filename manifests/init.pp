@@ -56,28 +56,37 @@ class rsnapshot (
   $cron_monthly_hour         = 21,
   $cron_monthly_minute       = 0,
   $cron_monthly_day_of_month = 28,
-	$rsnapshot_user            = 'rsnapshot',
+	$rsnapshot_user            = 'root',
 	$rsnapshot_group           = 'backup'){
 
+  # Work out variable bits
+  if $rsnapshot_user != 'root'{
+	  $rsnapshot_user_home = "/home/${rsnapshot_user}"
+	}else{
+	  $rsnapshot_user_home = '/root/'
+	}
+	
   package { 'rsnapshot':
     ensure => present,
   }
-
-  user { $rsnapshot_user:
-    ensure     => present,
-    home       => '/home/rsnapshot',
-    managehome => true,
-    uid        => '5000',
-    gid        => $rsnapshot_group,
-    shell      => '/bin/bash',
-  }
+	
+	if $rsnapshot_user != 'root'{
+  	user { $rsnapshot_user:
+  	  ensure     => present,
+  	  home       => $rsnapshot_user_home,
+  	  managehome => true,
+  	  uid        => '5000',
+  	  gid        => $rsnapshot_group,
+  	  shell      => '/bin/bash',
+  	}
+	}
 
   group { $rsnapshot_group:
     ensure => present,
     gid    => '5000',
   }
 
-  file { '/home/rsnapshot/.ssh/':
+  file { "${rsnapshot_user_home}/.ssh/":
     ensure  => directory,
     owner   => $rsnapshot_user,
     group   => $rsnapshot_group,
@@ -98,7 +107,7 @@ class rsnapshot (
     mode   => '0644'
   }
 
-  file { '/home/rsnapshot/.ssh/id_rsa':
+  file { '${rsnapshot_user_home}/.ssh/id_rsa':
     ensure  => present,
     content => $ssh_private_key,
     owner   => $rsnapshot_user,
@@ -122,33 +131,33 @@ class rsnapshot (
   if $sync_first {
     cron { 'rsnapshot_sync':
       command => '/usr/bin/rsnapshot sync',
-      user    => rsnapshot,
+      user    => $rsnapshot_user,
       hour    => $cron_sync_hour,
       minute  => $cron_sync_minute,
     }
   }
   cron { 'rsnapshot_hourly':
     command => '/usr/bin/rsnapshot hourly',
-    user    => rsnapshot,
+    user    => $rsnapshot_user,
     hour    => $cron_hourly_hour,
     minute  => $cron_hourly_minute,
   }
   cron { 'rsnapshot_daily':
     command => '/usr/bin/rsnapshot daily',
-    user    => rsnapshot,
+    user    => $rsnapshot_user,
     hour    => $cron_daily_hour,
     minute  => $cron_daily_minute,
   }
   cron { 'rsnapshot_weekly':
     command => '/usr/bin/rsnapshot weekly',
-    user    => rsnapshot,
+    user    => $rsnapshot_user,
     hour    => $cron_weekly_hour,
     minute  => $cron_weekly_minute,
     weekday => $cron_weekly_day_of_week,
   }
   cron { 'rsnapshot_monthly':
     command  => '/usr/bin/rsnapshot monthly',
-    user     => rsnapshot,
+    user     => $rsnapshot_user,
     hour     => $cron_monthly_hour,
     minute   => $cron_monthly_minute,
     monthday => $cron_monthly_day_of_month,
