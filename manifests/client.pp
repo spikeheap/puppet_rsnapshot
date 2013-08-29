@@ -4,7 +4,7 @@ class rsnapshot::client( 	$server_ip,
 													$client_username = 'rsnapshotclient',
 													$client_usergroup = 'backupclient'
 													){
-  include ssh-client
+  include ssh::client
 
   user { $client_username:
     ensure     => present,
