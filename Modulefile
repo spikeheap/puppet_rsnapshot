@@ -7,4 +7,4 @@ summary 'Resource types for managing an Rsnapshot server and remote/local client
 license 'GPL v3'
 project_page 'https://github.com/spikeheap/puppet_rsnapshot'
 ## Add dependencies, if any:
-dependency 'saz/ssh', v1.2.0
+dependency 'saz/ssh'
