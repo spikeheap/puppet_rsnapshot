@@ -64,15 +64,6 @@ class rsnapshot::client( 	$server_ip,
     mode   => '0754',
   }
 
-  @@sshkey{"${::fqdn}":
-    ensure  => present,
-    type    => 'rsa',
-    key     => $sshrsakey,
-    host_aliases => $host_aliases,
-    tag     => 'rsnapshot-client',
-  }
-#  Sshkey <<| tag == 'rsnapshot' |>>
-
 # TODO sudoers:
 # rsnapshotclient ALL=NOPASSWD:/usr/bin/rsync
   rsnapshot::directory{$dirs: }
